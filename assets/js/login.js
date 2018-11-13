@@ -37,13 +37,14 @@ function createUser(user) {
             snapshot.forEach(function (childSnapshot) {
                 if (childSnapshot.val().email) {
                     localStorage.setItem('userEmail', user.email);
-                    window.location.replace("schedule.html");
+                    setTimeout(window.location.replace("schedule.html"),2000);
                 } else {
                     localStorage.setItem('userEmail', user.email);
                     database.ref('/users').push({
                         email: user.email,
                         admin: admin
                     });
+                    setTimeout(window.location.replace("schedule.html"),2000);
                 }
             });
         }, function (error) {
@@ -52,9 +53,9 @@ function createUser(user) {
                 email: user.email,
                 admin: admin
             });
+            setTimeout(window.location.replace("schedule.html"),2000);
         });
 
-    window.location.replace("schedule.html");
 }
 function onGit() {
     const provider = new firebase.auth.GithubAuthProvider();
