@@ -9,12 +9,12 @@ $(document).ready(function () {
   };
   firebase.initializeApp(config);
   var database = firebase.database();
-
+  var userIsAdmin = false;
   setTimeout(function(){
     if(localStorage.getItem('userEmail') == null){
       window.location.replace('index.html');
     }
-    var userIsAdmin = false;
+    
   
     var database = firebase.database();
     database.ref('/users').orderByChild('email').equalTo(localStorage.getItem('userEmail'))
