@@ -19,7 +19,7 @@ function onGoogle() {
 
         .then(result => {
             const user = result.user;
-            if (localStorage.getItem('userEmail') && localStorage.getItem('userEmail') == user.email) {
+            if (document.cookie['userEmail'] && document.cookie['userEmail'] == user.email) {
                 window.location.replace("schedule.html");
 
             } else {
@@ -36,10 +36,10 @@ function createUser(user) {
         .once('value').then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 if (childSnapshot.val().email) {
-                    localStorage.setItem('userEmail', user.email);
+                    document.cookie = 'userEmail='+ user.email;
                     setTimeout(window.location.replace("schedule.html"),2000);
                 } else {
-                    localStorage.setItem('userEmail', user.email);
+                    document.cookie = 'userEmail='+ user.email;
                     database.ref('/users').push({
                         email: user.email,
                         admin: admin
@@ -48,7 +48,7 @@ function createUser(user) {
                 }
             });
         }, function (error) {
-            localStorage.setItem('userEmail', user.email);
+            document.cookie = 'userEmail='+ user.email;
             database.ref('/users').push({
                 email: user.email,
                 admin: admin
@@ -64,7 +64,7 @@ function onGit() {
 
     .then(result => {
         const user = result.user;
-        if (localStorage.getItem('userEmail') && localStorage.getItem('userEmail') == user.email) {
+        if (document.cookie['userEmail'] && document.cookie['userEmail'] == user.email) {
             window.location.replace("schedule.html");
 
         } else {

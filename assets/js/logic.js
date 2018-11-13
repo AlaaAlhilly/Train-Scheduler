@@ -1,5 +1,24 @@
 $(document).ready(function () {
   
+  function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+var loggedEmail = readCookie('userEmail');
+if(loggedEmail == null){
+  $('.sign').show();
+  $('.asign').hide();
+}else{
+  $('.sign').hide();
+  $('.asign').show();
+}
+console.log(loggedEmail);
   var userIsAdmin = false;
   var config = {
     apiKey: "AIzaSyATzuQ-rguhSoRNnC3tYT_PuCKYcHeDlB0",
@@ -11,15 +30,8 @@ $(document).ready(function () {
   };
   firebase.initializeApp(config);
   var database = firebase.database();
-  database.ref('/users').orderByChild('email').equalTo(localStorage.getItem('userEmail'))
+  database.ref('/users').orderByChild('email').equalTo(loggedEmail)
     .once('value').then(function (snapshot) {
-      if(localStorage.getItem('userEmail') == null){
-        $('.sign').show();
-        $('.asign').hide();
-      }else{
-        $('.sign').hide();
-        $('.asign').show();
-      }
       snapshot.forEach(function (childSnapshot) {
         if (childSnapshot.val().admin) {
           console.log(childSnapshot.val().admin);
@@ -67,7 +79,7 @@ $(document).ready(function () {
       rowid,
     });
     rowid++;
-    $("#trainName").val("");
+    $("#trainname").val("");
     $("#destination").val("");
     $("#ftt").val("");
     $("#frequency").val("");
@@ -149,9 +161,12 @@ $(document).ready(function () {
       });
   });
 });
+var delete_cookie = function(name) {
+  document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
 function signout(){
   firebase.auth().signOut().then(function() {
-    localStorage.clear();
+   delete_cookie('userEmail');
     window.location.replace('index.html');
   }, function(error) {
     console.error('Sign Out Error', error);
