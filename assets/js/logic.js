@@ -26,20 +26,9 @@ $(document).ready(function () {
       });
     }, function (error) {
       alert("you are not allowed to edit the database");
+    },function(err){
+      window.location.replace('index.html');
     });
-  // database.ref('/users').on("value",function(snap){
-  //   console.log(snap.val().admin);
-  //   if(snap.val() != null){
-  //     if(snap.val().admin){
-  //       userIsAdmin = true;
-
-
-  //     }
-  //   }
-  // },function(error){
-  //   console.log('something wrong')
-  // });
-
   // Create a variable to reference the database.
   var database = firebase.database();
 
