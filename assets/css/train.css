@@ -9,3 +9,8 @@ body {
   .toDis,toDisb{
       display: none;
   }
+  .form-signin{
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+  }
