@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  if(sessionStorage.getItem('userEmail') == null){
+  if(localStorage.getItem('userEmail') == null){
     window.location.replace('index.html');
   }
   var userIsAdmin = false;
@@ -13,7 +13,7 @@ $(document).ready(function () {
   };
   firebase.initializeApp(config);
   var database = firebase.database();
-  database.ref('/users').orderByChild('email').equalTo(sessionStorage.getItem('userEmail'))
+  database.ref('/users').orderByChild('email').equalTo(localStorage.getItem('userEmail'))
     .once('value').then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         //remove each child
@@ -162,7 +162,7 @@ $(document).ready(function () {
 });
 function signout(){
   firebase.auth().signOut().then(function() {
-    // sessionStorage.clear();
+    // localStorage.clear();
     window.location.replace('index.html');
   }, function(error) {
     console.error('Sign Out Error', error);

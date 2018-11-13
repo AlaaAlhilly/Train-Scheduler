@@ -19,7 +19,7 @@ function onGoogle() {
 
         .then(result => {
             const user = result.user;
-            if (sessionStorage.getItem('userEmail') && sessionStorage.getItem('userEmail') == user.email) {
+            if (localStorage.getItem('userEmail') && localStorage.getItem('userEmail') == user.email) {
                 window.location.replace("schedule.html");
 
             } else {
@@ -36,10 +36,10 @@ function createUser(user) {
         .once('value').then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 if (childSnapshot.val().email) {
-                    sessionStorage.setItem('userEmail', user.email);
+                    localStorage.setItem('userEmail', user.email);
                     window.location.replace("schedule.html");
                 } else {
-                    sessionStorage.setItem('userEmail', user.email);
+                    localStorage.setItem('userEmail', user.email);
                     database.ref('/users').push({
                         email: user.email,
                         admin: admin
@@ -47,7 +47,7 @@ function createUser(user) {
                 }
             });
         }, function (error) {
-            sessionStorage.setItem('userEmail', user.email);
+            localStorage.setItem('userEmail', user.email);
             database.ref('/users').push({
                 email: user.email,
                 admin: admin
@@ -63,7 +63,7 @@ function onGit() {
 
     .then(result => {
         const user = result.user;
-        if (sessionStorage.getItem('userEmail') && sessionStorage.getItem('userEmail') == user.email) {
+        if (localStorage.getItem('userEmail') && localStorage.getItem('userEmail') == user.email) {
             window.location.replace("schedule.html");
 
         } else {
