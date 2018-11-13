@@ -13,10 +13,14 @@ $(document).ready(function () {
   var database = firebase.database();
   database.ref('/users').orderByChild('email').equalTo(localStorage.getItem('userEmail'))
     .once('value').then(function (snapshot) {
+      if(localStorage.getItem('userEmail') == null){
+        $('.sign').show();
+        $('.asign').hide();
+      }else{
+        $('.sign').hide();
+        $('.asign').show();
+      }
       snapshot.forEach(function (childSnapshot) {
-        //remove each child
-        // var fireE = database.ref('/users').child(childSnapshot.key);
-        // alert(childSnapshot.val().admin);
         if (childSnapshot.val().admin) {
           console.log(childSnapshot.val().admin);
           userIsAdmin = true;
@@ -25,8 +29,6 @@ $(document).ready(function () {
         }
       });
     }, function (error) {
-      alert("you are not allowed to edit the database");
-    },function(err){
       window.location.replace('index.html');
     });
   // Create a variable to reference the database.
