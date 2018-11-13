@@ -162,6 +162,7 @@ $(document).ready(function () {
 });
 function signout(){
   firebase.auth().signOut().then(function() {
+    localStorage.setItem('userEmail','');
     window.location.replace('index.html');
   }, function(error) {
     console.error('Sign Out Error', error);
