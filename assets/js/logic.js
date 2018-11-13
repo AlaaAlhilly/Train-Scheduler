@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  
+  var userIsAdmin = false;
   var config = {
     apiKey: "AIzaSyATzuQ-rguhSoRNnC3tYT_PuCKYcHeDlB0",
     authDomain: "train-schedular-5c12b.firebaseapp.com",
@@ -9,54 +11,45 @@ $(document).ready(function () {
   };
   firebase.initializeApp(config);
   var database = firebase.database();
-  var userIsAdmin = false;
-  setTimeout(function(){
-    if(localStorage.getItem('userEmail') == null){
-      window.location.replace('index.html');
-    }
-    
-  
-    var database = firebase.database();
-    database.ref('/users').orderByChild('email').equalTo(localStorage.getItem('userEmail'))
-      .once('value').then(function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-          //remove each child
-          // var fireE = database.ref('/users').child(childSnapshot.key);
-          // alert(childSnapshot.val().admin);
-          if (childSnapshot.val().admin) {
-            console.log(childSnapshot.val().admin);
-            userIsAdmin = true;
-            $('.toDis').css('display', 'block');
-            $('.toDisb').css('display', 'table-cell');
-          }
-        });
-      }, function (error) {
-        alert("you are not allowed to edit the database");
+  database.ref('/users').orderByChild('email').equalTo(localStorage.getItem('userEmail'))
+    .once('value').then(function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        //remove each child
+        // var fireE = database.ref('/users').child(childSnapshot.key);
+        // alert(childSnapshot.val().admin);
+        if (childSnapshot.val().admin) {
+          console.log(childSnapshot.val().admin);
+          userIsAdmin = true;
+          $('.toDis').css('display', 'block');
+          $('.toDisb').css('display', 'table-cell');
+        }
       });
-    // database.ref('/users').on("value",function(snap){
-    //   console.log(snap.val().admin);
-    //   if(snap.val() != null){
-    //     if(snap.val().admin){
-    //       userIsAdmin = true;
-  
-  
-    //     }
-    //   }
-    // },function(error){
-    //   console.log('something wrong')
-    // });
-  
-    // Create a variable to reference the database.
-  
-    // Initial Values
-    
-  },3000);
+    }, function (error) {
+      alert("you are not allowed to edit the database");
+    });
+  // database.ref('/users').on("value",function(snap){
+  //   console.log(snap.val().admin);
+  //   if(snap.val() != null){
+  //     if(snap.val().admin){
+  //       userIsAdmin = true;
+
+
+  //     }
+  //   }
+  // },function(error){
+  //   console.log('something wrong')
+  // });
+
+  // Create a variable to reference the database.
+  var database = firebase.database();
+
+  // Initial Values
   var trainName = "";
-    var destination = "";
-    var nextTimeTrain = "";
-    var frequency = "";
-    var minutesAway = 0;
-    var rowid = 0;
+  var destination = "";
+  var nextTimeTrain = "";
+  var frequency = "";
+  var minutesAway = 0;
+  var rowid = 0;
   // Capture Button Click
   $("#submit").on("click", function (event) {
     if (!userIsAdmin) {
