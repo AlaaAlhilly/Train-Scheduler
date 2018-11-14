@@ -44,6 +44,7 @@ function onGoogle() {
 }
 async function createUser(user) {
     var admin = false;
+    var emailNotFound =true;
     let a = await function(){
         database.ref('/users').orderByChild('email').equalTo(user.email)
         .once('value').then(function (snapshot) {
