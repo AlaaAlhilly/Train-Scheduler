@@ -89,7 +89,6 @@ console.log(loggedEmail);
     var sv = snapshot.val();
 
 
-    var timediff = moment().diff(moment.unix(sv.timeInput), "minutes");
     var remainmins = moment().diff(moment.unix(sv.timeInput), "minutes") % sv.frequency;
     var minutes = sv.frequency - remainmins;
 
