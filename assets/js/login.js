@@ -44,16 +44,15 @@ function createUser(user) {
                         email: user.email,
                         admin: admin
                     });
-                    setTimeout(window.location.replace("schedule.html"),2000);
+                    window.location.replace("schedule.html");
                 }
             });
-        }, function (error) {
-            document.cookie = 'userEmail='+ user.email;
-            database.ref('/users').push({
-                email: user.email,
-                admin: admin
-            });
-            setTimeout(window.location.replace("schedule.html"),2000);
+                document.cookie = 'userEmail='+ user.email;
+                database.ref('/users').push({
+                    email: user.email,
+                    admin: admin
+                });
+                window.location.replace("schedule.html");
         });
 
 }
