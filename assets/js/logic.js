@@ -34,7 +34,6 @@ console.log(loggedEmail);
     .once('value').then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         if (childSnapshot.val().admin) {
-          console.log(childSnapshot.val().admin);
           userIsAdmin = true;
           $('.toDis').css('display', 'block');
           $('.toDisb').css('display', 'table-cell');
@@ -67,8 +66,6 @@ console.log(loggedEmail);
     timeInput = moment($("#ftt").val().trim(), "HH:mm").subtract(10, "years").format("X");;
 
     frequency = $("#frequency").val().trim();
-
-    //time calculating
 
     // Code for handling the push
     database.ref('/trains').push({

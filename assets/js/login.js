@@ -11,6 +11,7 @@ var config = {
 };
 firebase.initializeApp(config);
 var database = firebase.database();
+var emailNotFound = true;
 function onGoogle() {
 
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -32,13 +33,17 @@ function onGoogle() {
 }
 function createUser(user) {
     var admin = false;
+    
     database.ref('/users').orderByChild('email').equalTo(user.email)
         .once('value').then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
-                if (childSnapshot.val().email) {
-                    document.cookie = 'userEmail='+ user.email;
-                    setTimeout(window.location.replace("schedule.html"),2000);
-                } else {
+                console.log(childSnapshot.val().email);
+                emailNotFound = false;
+                document.cookie = 'userEmail='+ user.email;
+                window.location.replace("schedule.html");
+                return;
+            }).then(function(){
+                if(emailNotFound){
                     document.cookie = 'userEmail='+ user.email;
                     database.ref('/users').push({
                         email: user.email,
@@ -47,14 +52,10 @@ function createUser(user) {
                     window.location.replace("schedule.html");
                 }
             });
-                document.cookie = 'userEmail='+ user.email;
-                database.ref('/users').push({
-                    email: user.email,
-                    admin: admin
-                });
-                window.location.replace("schedule.html");
+                
         });
-
+        
+    
 }
 function onGit() {
     const provider = new firebase.auth.GithubAuthProvider();
