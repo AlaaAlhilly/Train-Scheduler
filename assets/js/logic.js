@@ -100,7 +100,7 @@ $(document).ready(function () {
     var nextTrainTime = moment().add(minutes, "m").format("hh:mm A");
 
     $('tbody').append(
-      `<tr>
+      `<tr class="table-secondary">
         <th id="${sv.rowid}tname" data-content=${sv.rowid} contenteditable>${sv.trainName}</th>
         <td id="${sv.rowid}dest" data-content=${sv.rowid} contenteditable>${sv.destination}</td>
         <td id="${sv.rowid}frq" data-content=${sv.rowid} contenteditable>${sv.frequency}</td>
