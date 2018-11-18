@@ -1,25 +1,25 @@
 $(document).ready(function () {
-  
+
   function readCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
-}
-var loggedEmail = readCookie('userEmail');
+  }
+  var loggedEmail = readCookie('userEmail');
 
-if(loggedEmail == null){
-  $('.sign').show();
-  $('.asign').hide();
-}else{
-  $('.sign').hide();
-  $('.asign').show();
-}
-console.log(loggedEmail);
+  if (loggedEmail == null) {
+    $('.sign').show();
+    $('.asign').hide();
+  } else {
+    $('.sign').hide();
+    $('.asign').show();
+  }
+  console.log(loggedEmail);
   var userIsAdmin = false;
   var config = {
     apiKey: "AIzaSyATzuQ-rguhSoRNnC3tYT_PuCKYcHeDlB0",
@@ -51,8 +51,8 @@ console.log(loggedEmail);
   var destination = "";
   var frequency = "";
   var rowid = 0;
-  database.ref('/trains').orderByKey().limitToLast(1).on('child_added',function(snapshot) {
-    if(snapshot.val()){
+  database.ref('/trains').orderByKey().limitToLast(1).on('child_added', function (snapshot) {
+    if (snapshot.val()) {
       rowid = snapshot.val().rowid;
       rowid++;
     }
@@ -81,7 +81,7 @@ console.log(loggedEmail);
       rowid,
     });
     rowid++;
-    document.cookie =';'+'recordNumber='+rowid;
+    document.cookie = ';' + 'recordNumber=' + rowid;
     console.log(readCookie('recordNumber'));
     $("#trainname").val("");
     $("#destination").val("");
@@ -91,7 +91,6 @@ console.log(loggedEmail);
 
   });
 
-  // Firebase watcher .on("child_added"
   database.ref('/trains').on("child_added", function (snapshot) {
     var sv = snapshot.val();
 
@@ -120,7 +119,7 @@ console.log(loggedEmail);
       </tr>`
 
     );
-    if(!userIsAdmin){
+    if (!userIsAdmin) {
       $('.toDis').css('display', 'none');
       $('.toDisb').css('display', 'none');
     }
@@ -162,15 +161,35 @@ console.log(loggedEmail);
         alert("you are not allowed to edit the database");
       });
   });
+  var delete_cookie = function (name) {
+    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  };
+  function signout() {
+    firebase.auth().signOut().then(function () {
+      delete_cookie('userEmail');
+      window.location.replace('index.html');
+    }, function (error) {
+      console.error('Sign Out Error', error);
+    });
+  }
+  function updateFrequencyEveryMinute() {
+    database.ref('/trains').on('value', function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        var remainmins = moment().diff(moment.unix(childSnapshot.val().timeInput), "minutes") % childSnapshot.val().frequency;
+        var minutes = childSnapshot.val().frequency - remainmins;
+        
+        var nextTrainTime = moment().add(minutes, "m").format("hh:mm A");
+        $(`#${childSnapshot.val().rowid}mn`).text(minutes);
+        $(`#${childSnapshot.val().rowid}ntt`).text(nextTrainTime);
+        database.ref('/trains').child(childSnapshot.key).update({
+          minutesAway:minutes
+        });
+      });
+    }, function (error) {
+      console.log(error.errorCode);
+    });
+
+  }
+  setInterval(updateFrequencyEveryMinute, 60000);
 });
-var delete_cookie = function(name) {
-  document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-};
-function signout(){
-  firebase.auth().signOut().then(function() {
-   delete_cookie('userEmail');
-    window.location.replace('index.html');
-  }, function(error) {
-    console.error('Sign Out Error', error);
-  });
-}
+
