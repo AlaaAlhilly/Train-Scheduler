@@ -19,7 +19,6 @@ $(document).ready(function () {
     $('.sign').hide();
     $('.asign').show();
   }
-  console.log(loggedEmail);
   var userIsAdmin = false;
   var config = {
     apiKey: "AIzaSyATzuQ-rguhSoRNnC3tYT_PuCKYcHeDlB0",
@@ -38,6 +37,7 @@ $(document).ready(function () {
           userIsAdmin = true;
           $('.toDis').css('display', 'block');
           $('.toDisb').css('display', 'table-cell');
+          return;
         }
       });
     }, function (error) {
@@ -81,8 +81,6 @@ $(document).ready(function () {
       rowid,
     });
     rowid++;
-    document.cookie = ';' + 'recordNumber=' + rowid;
-    console.log(readCookie('recordNumber'));
     $("#trainname").val("");
     $("#destination").val("");
     $("#ftt").val("");
@@ -129,7 +127,6 @@ $(document).ready(function () {
     console.log("Errors handled: " + errorObject.code);
   });
   $('tbody').on('click', '.del', function () {
-    console.log($(this).attr('data-content'));
     database.ref('/trains').orderByChild('rowid').equalTo(parseInt($(this).attr('data-content')))
       .once('value').then(function (snapshot) {
         snapshot.forEach(function (childSnapshot) {

@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+    
 function readCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
@@ -16,7 +16,6 @@ if (loggedEmail != null) {
 }
 });
 // Initialize Firebase
-
 var config = {
     apiKey: "AIzaSyATzuQ-rguhSoRNnC3tYT_PuCKYcHeDlB0",
     authDomain: "train-schedular-5c12b.firebaseapp.com",
@@ -27,6 +26,7 @@ var config = {
 };
 firebase.initializeApp(config);
 var database = firebase.database();
+
 var emailNotFound = true;
 function onGoogle() {
 
@@ -41,31 +41,35 @@ function onGoogle() {
         .catch(console.log)
 }
 async function createUser(user) {
+    var loggedEmail = user.email
     var admin = false;
     var emailNotFound =true;
-    let a = await function(){
-        database.ref('/users').orderByChild('email').equalTo(user.email)
+    
+        database.ref('/users').orderByChild('email').equalTo(loggedEmail)
         .once('value').then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
-                console.log(childSnapshot.val().email);
                 emailNotFound = false;
+                console.log(emailNotFound);
                 document.cookie = 'userEmail='+ user.email;
                 window.location.replace("schedule.html");
-                return;
+                return true;
             });
                 
         },function(err){
             alert(err);
         });
-    }
+        let a = await function(){
         if(emailNotFound){
             document.cookie = 'userEmail='+ user.email;
-            database.ref('/users').push({
+            database.ref(`/users`).push({
                 email: user.email,
                 admin: admin
+            },function(err){
+                console.log(err);
             });
             window.location.replace("schedule.html");
         }
+    }
 }
 function onGit() {
     const provider = new firebase.auth.GithubAuthProvider();
