@@ -39,8 +39,6 @@ function onGoogle() {
             createUser(user);
         })
         .catch(console.log)
-
-
 }
 async function createUser(user) {
     var admin = false;

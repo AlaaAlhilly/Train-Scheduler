@@ -11,6 +11,7 @@ $(document).ready(function () {
     return null;
 }
 var loggedEmail = readCookie('userEmail');
+
 if(loggedEmail == null){
   $('.sign').show();
   $('.asign').hide();
@@ -48,10 +49,14 @@ console.log(loggedEmail);
   // Initial Values
   var trainName = "";
   var destination = "";
-  var nextTimeTrain = "";
   var frequency = "";
-  var minutesAway = 0;
   var rowid = 0;
+  database.ref('/trains').orderByKey().limitToLast(1).on('child_added',function(snapshot) {
+    if(snapshot.val()){
+      rowid = snapshot.val().rowid;
+      rowid++;
+    }
+  });
   // Capture Button Click
   $("#submit").on("click", function (event) {
     if (!userIsAdmin) {
@@ -76,6 +81,8 @@ console.log(loggedEmail);
       rowid,
     });
     rowid++;
+    document.cookie =';'+'recordNumber='+rowid;
+    console.log(readCookie('recordNumber'));
     $("#trainname").val("");
     $("#destination").val("");
     $("#ftt").val("");
@@ -87,7 +94,6 @@ console.log(loggedEmail);
   // Firebase watcher .on("child_added"
   database.ref('/trains').on("child_added", function (snapshot) {
     var sv = snapshot.val();
-
 
     var remainmins = moment().diff(moment.unix(sv.timeInput), "minutes") % sv.frequency;
     var minutes = sv.frequency - remainmins;
@@ -141,13 +147,12 @@ console.log(loggedEmail);
     database.ref('/trains').orderByChild('rowid').equalTo(parseInt($(this).attr('data-content')))
       .once('value').then(function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
-          //remove each child
+          //update each child in this case we get only one child with rowid
           database.ref('/trains').child(childSnapshot.key).update({
             trainName: $('tbody').find('#tname').text(),
             destination: $('tbody').find('#dest').text(),
-            frequency: $('tbody').find('#freq').text(),
+            frequency: parseInt($('tbody').find('#frq').text()),
             minutesAway: $('tbody').find('#mn').text(),
-            rowid,
             dateAdded: firebase.database.ServerValue.TIMESTAMP
           });
           location.reload();

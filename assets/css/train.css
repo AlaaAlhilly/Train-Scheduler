@@ -14,3 +14,10 @@ body {
       justify-content: center;
       margin-top: 20px;
   }
+  .card-body a {
+    word-break: break-all;
+  }
+
+  .articleHeadline {
+    line-height: 1.5;
+  }
