@@ -102,18 +102,18 @@ console.log(loggedEmail);
 
     $('tbody').append(
       `<tr>
-        <th id="tname" data-content=${sv.rowid} contenteditable>${sv.trainName}</th>
-        <td id="dest" data-content=${sv.rowid} contenteditable>${sv.destination}</td>
-        <td id="frq" data-content=${sv.rowid} contenteditable>${sv.frequency}</td>
-        <td id="ntt" data-content=${sv.rowid}>${nextTrainTime}</td>
-        <td id="mn" data-content=${sv.rowid}>${minutes}</td>
+        <th id="${sv.rowid}tname" data-content=${sv.rowid} contenteditable>${sv.trainName}</th>
+        <td id="${sv.rowid}dest" data-content=${sv.rowid} contenteditable>${sv.destination}</td>
+        <td id="${sv.rowid}frq" data-content=${sv.rowid} contenteditable>${sv.frequency}</td>
+        <td id="${sv.rowid}ntt" data-content=${sv.rowid}>${nextTrainTime}</td>
+        <td id="${sv.rowid}mn" data-content=${sv.rowid}>${minutes}</td>
         <td class="toDisb">
-          <button data-content="${sv.rowid}" id="up" class="btn btn-primary btn-xs" >
+          <button data-content="${sv.rowid}"  class="btn btn-primary btn-xs up" >
             <i class="fa fa-pencil-square-o"></i>update
           </button>
         </td>
         <td class="toDisb">
-          <button data-content="${sv.rowid}" id="del" class="btn btn-danger btn-xs">
+          <button data-content="${sv.rowid}" class="del btn btn-danger btn-xs">
             <i class="fa fa-eraser"></i>delete
           </button>
         </td>
@@ -129,7 +129,7 @@ console.log(loggedEmail);
   }, function (errorObject) {
     console.log("Errors handled: " + errorObject.code);
   });
-  $('tbody').on('click', '#del', function () {
+  $('tbody').on('click', '.del', function () {
     console.log($(this).attr('data-content'));
     database.ref('/trains').orderByChild('rowid').equalTo(parseInt($(this).attr('data-content')))
       .once('value').then(function (snapshot) {
@@ -142,17 +142,18 @@ console.log(loggedEmail);
         alert("you are not allowed to edit the database");
       });
   });
-  $('tbody').on('click', '#up', function () {
-    console.log($(this).attr('data-content'));
-    database.ref('/trains').orderByChild('rowid').equalTo(parseInt($(this).attr('data-content')))
+
+  $('tbody').on('click', '.up', function () {
+    var currentRec = parseInt($(this).attr('data-content'));
+    database.ref('/trains').orderByChild('rowid').equalTo(currentRec)
       .once('value').then(function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
           //update each child in this case we get only one child with rowid
           database.ref('/trains').child(childSnapshot.key).update({
-            trainName: $('tbody').find('#tname').text(),
-            destination: $('tbody').find('#dest').text(),
-            frequency: parseInt($('tbody').find('#frq').text()),
-            minutesAway: $('tbody').find('#mn').text(),
+            trainName: $('tbody').find(`#${currentRec}tname`).text(),
+            destination: $('tbody').find(`#${currentRec}dest`).text(),
+            frequency: parseInt($('tbody').find(`#${currentRec}frq`).text()),
+            minutesAway: $('tbody').find(`#${currentRec}mn`).text(),
             dateAdded: firebase.database.ServerValue.TIMESTAMP
           });
           location.reload();
