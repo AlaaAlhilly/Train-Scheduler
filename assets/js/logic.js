@@ -161,17 +161,7 @@ $(document).ready(function () {
         alert("you are not allowed to edit the database");
       });
   });
-  var delete_cookie = function (name) {
-    document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  };
-  function signout() {
-    firebase.auth().signOut().then(function () {
-      delete_cookie('userEmail');
-      window.location.replace('index.html');
-    }, function (error) {
-      console.error('Sign Out Error', error);
-    });
-  }
+ 
   function updateFrequencyEveryMinute() {
     database.ref('/trains').on('value', function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
@@ -193,3 +183,14 @@ $(document).ready(function () {
   setInterval(updateFrequencyEveryMinute, 60000);
 });
 
+var delete_cookie = function (name) {
+  document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+function signout() {
+  firebase.auth().signOut().then(function () {
+    delete_cookie('userEmail');
+    window.location.replace('index.html');
+  }, function (error) {
+    console.error('Sign Out Error', error);
+  });
+}
